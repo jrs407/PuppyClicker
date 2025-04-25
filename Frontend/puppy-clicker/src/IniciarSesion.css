@@ -135,3 +135,10 @@
     background-color: #CA8830;
     cursor: pointer;
 }
+
+.mensaje-error {
+    color: #ff4444;
+    font-size: 1.8vh;
+    margin-top: 2vh;
+    margin-bottom: 2vh;
+}
