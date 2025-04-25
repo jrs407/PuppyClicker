@@ -18,9 +18,9 @@ USE `mydb` ;
 -- Table `mydb`.`Usuario`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`Usuario` (
-  `idUsuario` INT NOT NULL,
+  `idUsuario` INT NOT NULL AUTO_INCREMENT,
   `usuario` VARCHAR(45) NOT NULL,
-  `contraseña` LONGTEXT NOT NULL,
+  `contrasena` LONGTEXT NOT NULL,
   `estaEliminado` TINYINT(1) NULL,
   `puntos` INT NULL,
   PRIMARY KEY (`idUsuario`),

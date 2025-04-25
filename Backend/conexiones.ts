@@ -2,6 +2,7 @@ import express from 'express';
 import mysql from 'mysql2/promise';
 import { dbConfig } from './config/database';
 import crearCuenta from './endpoints/crearCuenta';
+import iniciarSesion from './endpoints/iniciarSesion';
 
 const router = express.Router();
 
@@ -23,5 +24,6 @@ router.get('/test', async (req: any, res) => {
 });
 
 router.use('/cuenta', crearCuenta);
+router.use('/iniciar-sesion', iniciarSesion);
 
 export default router;
