@@ -1,0 +1,33 @@
+services:
+  frontend:
+    build:
+      context: ./Frontend/puppy-clicker
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./Frontend/puppy-clicker:/app
+      - /app/node_modules
+    environment:
+      - WATCHPACK_POLLING=true
+      - VITE_API_URL=http://backend:8080
+    depends_on:
+      - backend
+    networks:
+      - puppy-network
+
+  backend:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./Backend:/usr/src/app
+      - /usr/src/app/node_modules
+    networks:
+      - puppy-network
+
+networks:
+  puppy-network:
+    driver: bridge
