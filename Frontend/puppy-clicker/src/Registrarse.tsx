@@ -45,7 +45,7 @@ const Registrarse: React.FC = () => {
             }
 
             if (response.ok) {
-                navigate('/home');
+                navigate('/clicker', { state: { usuario } });
             } else {
                 setError(data.error || `Error ${response.status}: ${response.statusText}`);
             }
