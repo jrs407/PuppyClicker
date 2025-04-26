@@ -32,6 +32,7 @@ const Clicker: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const [clickImages, setClickImages] = useState<ClickImage[]>([]);
+    const [puntos, setPuntos] = useState(0);
     const { userData } = location.state as LocationState || { 
         userData: { 
             idUsuario: 0,
@@ -44,9 +45,30 @@ const Clicker: React.FC = () => {
         if (!userData?.usuario) {
             navigate('/login');
         }
+        setPuntos(userData?.puntos || 0);
     }, [userData, navigate]);
 
-    const handleClick = (e: React.MouseEvent) => {
+    const registrarClick = async () => {
+        try {
+            const response = await fetch('http://localhost:8080/api/click', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    idUsuario: userData.idUsuario
+                }),
+            });
+
+            if (response.ok) {
+                setPuntos(prev => prev + 1);
+            }
+        } catch (error) {
+            console.error('Error al registrar click:', error);
+        }
+    };
+
+    const handleClick = async (e: React.MouseEvent) => {
         const clickImages = [click1, click2, click3, click4, click5, click6, click7, click8, click9, click10];
         const randomImage = clickImages[Math.floor(Math.random() * clickImages.length)];
         
@@ -58,6 +80,7 @@ const Clicker: React.FC = () => {
         };
 
         setClickImages(prev => [...prev, newClick]);
+        await registrarClick();
         
         setTimeout(() => {
             setClickImages(prev => prev.filter(click => click.id !== newClick.id));
@@ -90,7 +113,7 @@ const Clicker: React.FC = () => {
             <div className = "segundo-tercio">
                 <div className= 'parte-central'>
                     <div className='contador-clicker'>
-                        <p className='numero-clicker'>{userData?.puntos}</p>
+                        <p className='numero-clicker'>{puntos}</p>
                     </div>
                     <div className='segundo-tercio-central'>
                         <div 

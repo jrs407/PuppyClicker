@@ -1,20 +1,20 @@
 .primer-tercio {
-    background-color: #663c00;
+    background-color: #2A2520;
     height: 100%;
     width: 25vw;
     border: 1px solid #E39B3A;
 }
 
 .primer-tercio-parte-superior {
-    background-color: #005780;
-    border: 1px solid #E39B3A;
+    background-color: #332B24;
+    border: 1px solid #885D23;
     width: 24.9vw;
     height:7vh;
 }
 
 .primer-tercio-parte-central {
-    background-color: #6e6d28;
-    border: 1px solid #E39B3A;
+    background-color: #3D3229;
+    border: 1px solid #885D23;
     width: 23.9vw;
     height: 30vh;
     display: flex;
@@ -27,19 +27,19 @@
 
 
 .cerrar-sesion {
-    background-color: #800000;
+    background-color: #8B2E2E;
     width: 12vh;
     height: 5vh;
     border-radius: 1vh;
     margin-top: 1vh;
     margin-left: 1vh;
     font-size: 1.5vh;
-    border: 1px solid #E39B3A;
+    border: 1px solid #885D23;
 }
 
 
 .cerrar-sesion:hover {
-    background-color: #770101;
+    background-color: #A13535;
     cursor: url('/src/assets/Cursor2.png'), pointer !important;
 }
 
@@ -51,7 +51,7 @@
 
 
 .segundo-tercio {
-    background-color: #006b11;
+    background-color: #2A2520;
     height: 100%;
     width: 50vw;
     display: flex;
@@ -108,7 +108,7 @@
 }
 
 .boton-clicker {
-    background: #4b0150;
+    background: #332B24;
     width: 40vh;
     height: 40vh;
     border-radius: 50%;
@@ -168,7 +168,7 @@
 }
 
 .tercer-tercio {
-    background-color: #4b0150;
+    background-color: #2A2520;
     height: 100%;
     width: 25vw;
     border: 1px solid #E39B3A;
@@ -181,13 +181,13 @@
 }
 
 .tercer-tercio-parte-superior-titulo {
-    background-color: #00804b;
+    background-color: #332B24;
     width: 100%;
     height:9vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 1px solid #E39B3A;
+    border: 1px solid #885D23;
 }
 
 .tercer-tercio-parte-superior-titulo p{
@@ -197,7 +197,7 @@
 }
 
 .tercer-tercio-parte-superior-mejoras {
-    background-color: #800060;
+    background-color: #3D3229;
     width: 24.5vw;
     min-height: 8vh;
     max-height: 20vh;
@@ -212,18 +212,18 @@
 .mejora-item {
     width: 7.5vh;
     height: 7.5vh;
-    background-color: #4b0150;
-    border: 1px solid #E39B3A;
+    background-color: #332B24;
+    border: 1px solid #885D23;
     border-radius: 1vh;
 }
 
 .mejora-item:hover {
-    background-color: #6e0177;
+    background-color: #3D3229;
     cursor: url('/src/assets/Cursor2.png'), pointer !important;
 }
 
 .lista-edificios {
-    background-color: #6d8000;
+    background-color: #2A2520;
     width: 25vw;
     height: 73vh;
     display: flex;
@@ -238,19 +238,19 @@
     height: 8vh;
     display: flex;
     align-items: center;
-    background-color: #4b0150;
-    border: 1px solid #E39B3A;
+    background-color: #332B24;
+    border: 1px solid #885D23;
 }
 
 .edificio:hover {
-    background-color: #6e0177;
+    background-color: #3D3229;
     cursor: url('/src/assets/Cursor2.png'), pointer !important;
 }
 
 .edificio-imagen {
     width: 8vh;
     height: 8vh;
-    background-color: #663c00;
+    background-color: #2A2520;
     margin-right: 1vh;
 }
 
