@@ -34,7 +34,7 @@ const Clicker: React.FC = () => {
                     <button className='cerrar-sesion' onClick={() => navigate('/login')}>Cerrar sesion</button>
                 </div>
                 <div className='primer-tercio-parte-central'>
-                    <p className='titulo'>¡Bienvenido {userData?.usuario}!</p>
+                    <p className='descripcion'>¡Bienvenido {userData?.usuario}!</p>
                 </div>
             </div>
 
@@ -60,6 +60,19 @@ const Clicker: React.FC = () => {
                             <div key={index} className="mejora-item" />
                         ))}
                     </div>
+                </div>
+
+                <div className='lista-edificios'>
+                    {[...Array(20)].map((_, index) => (
+                        <div key={index} className="edificio">
+                            <div className="edificio-imagen"></div>
+                            <div className="edificio-info">
+                                <p className="edificio-nombre">Patata</p>
+                                <p className="edificio-coste">0</p>
+                            </div>
+                            <span className="edificio-cantidad">100</span>
+                        </div>
+                    ))}
                 </div>
             </div>
 
