@@ -50,6 +50,8 @@ const Clicker: React.FC = () => {
             puntos: 0
         } 
     };
+    const [hoveredId, setHoveredId] = useState<number | null>(null);
+
 
     const cargarEdificios = async () => {
         try {
@@ -187,7 +189,7 @@ const Clicker: React.FC = () => {
                             className='boton-clicker' 
                             onClick={handleClick}
                             style={{
-                                backgroundImage: 'url("https://i1.sndcdn.com/artworks-x8zI2HVC2pnkK7F5-4xKLyA-t1080x1080.jpg")',
+                                backgroundImage: 'url("https://i.pinimg.com/736x/f9/c5/9a/f9c59a1139f2ddf1f36ffc702f4b1d0e.jpg")',
                                 backgroundSize: 'cover',
                                 backgroundPosition: 'center'
                             }}
@@ -210,22 +212,42 @@ const Clicker: React.FC = () => {
                 </div>
 
                 <div className='lista-edificios'>
-                    {edificios.map((edificio) => (
-                        <div 
-                            key={edificio.idEdificios} 
-                            className="edificio"
-                            onClick={() => comprarEdificio(edificio)}
-                        >
-                            <div className="edificio-imagen"></div>
-                            <div className="edificio-info">
-                                <p className="edificio-nombre">{edificio.nombre}</p>
-                                <p className="edificio-coste">
-                                    {calcularPrecioEdificio(edificio.precioInicial, edificio.numeroComprado)}
-                                </p>
+                    {edificios.map((edificio) => {
+                        const precioActual = calcularPrecioEdificio(edificio.precioInicial, edificio.numeroComprado);
+                        const puedeComprar = puntos >= precioActual;
+                        return (
+                            <div
+                                key={edificio.idEdificios}
+                                className="edificio"
+                                onClick={() => comprarEdificio(edificio)}
+                                onMouseEnter={() => setHoveredId(edificio.idEdificios)}
+                                onMouseLeave={() => setHoveredId(null)}
+                                style={{
+                                    backgroundColor:
+                                        puedeComprar
+                                            ? (hoveredId === edificio.idEdificios 
+                                                ? '#5E503E'  /* más claro al hover */
+                                                : '#463A2F') /* estado comprable normal */
+                                            : '#332B24',
+                                    cursor: puedeComprar 
+                                        ? 'url("/src/assets/Cursor2.png"), pointer' 
+                                        : 'url("/src/assets/Cursor1.png"), not-allowed',
+                                    transition: 'background-color 0.2s ease'
+                                }}
+                            >
+                                <div className="edificio-imagen"></div>
+                                <div className="edificio-info">
+                                    <p className="edificio-nombre">{edificio.nombre}</p>
+                                    <p className="edificio-coste" style={{
+                                        color: puedeComprar ? '#4CAF50' : '#FF5252'
+                                    }}>
+                                        {calcularPrecioEdificio(edificio.precioInicial, edificio.numeroComprado)}
+                                    </p>
+                                </div>
+                                <span className="edificio-cantidad">{edificio.numeroComprado}</span>
                             </div>
-                            <span className="edificio-cantidad">{edificio.numeroComprado}</span>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
             </div>
 

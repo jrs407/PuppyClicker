@@ -240,10 +240,20 @@
     align-items: center;
     background-color: #332B24;
     border: 1px solid #885D23;
+    transition: background-color 0.2s ease;
 }
 
 .edificio:hover {
     background-color: #3D3229;
+}
+
+.edificio.edificio-comprable {
+    background-color: #3D3229;
+    cursor: url('/src/assets/Cursor2.png'), pointer !important;
+}
+
+.edificio.edificio-comprable:hover {
+    background-color: #4B3F35;
     cursor: url('/src/assets/Cursor2.png'), pointer !important;
 }
 
