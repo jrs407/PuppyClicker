@@ -13,6 +13,17 @@ import click8 from './assets/clicks/click8.png';
 import click9 from './assets/clicks/click9.png';
 import click10 from './assets/clicks/click10.png';
 
+import pugIcon from './assets/iconoEdificio/pug.png';
+import chihuahuaIcon from './assets/iconoEdificio/chihuahua.png';
+import retrieverIcon from './assets/iconoEdificio/retriever.png';
+import huskyIcon from './assets/iconoEdificio/husky.png';
+import pomeranianIcon from './assets/iconoEdificio/pomeranian.png';
+import poodleIcon from './assets/iconoEdificio/poodle.png';
+import terrierIcon from './assets/iconoEdificio/terrier.png';
+import collieIcon from './assets/iconoEdificio/collie.png';
+import shibaIcon from './assets/iconoEdificio/shiba.png';
+
+
 interface LocationState {
     userData: {
         idUsuario: number;
@@ -156,6 +167,21 @@ const Clicker: React.FC = () => {
         }
     };
 
+    const getEdificioIcon = (raza: string): string => {
+        const iconMap: { [key: string]: string } = {
+            'pug': pugIcon,
+            'chihuahua': chihuahuaIcon,
+            'poodle': poodleIcon,
+            'retriever': retrieverIcon,
+            'pomeranian': pomeranianIcon,
+            'collie': collieIcon,
+            'husky': huskyIcon,
+            'shiba': shibaIcon,
+            'terrier': terrierIcon
+        };
+        return iconMap[raza.toLowerCase()] || '';
+    };
+
     return (
         <div className='fondo'>
             {clickImages.map(click => (
@@ -235,7 +261,12 @@ const Clicker: React.FC = () => {
                                     transition: 'background-color 0.2s ease'
                                 }}
                             >
-                                <div className="edificio-imagen"></div>
+                                <div className="edificio-imagen" style={{
+                                    backgroundImage: `url(${getEdificioIcon(edificio.raza)})`,
+                                    backgroundSize: 'contain',
+                                    backgroundPosition: 'center',
+                                    backgroundRepeat: 'no-repeat'
+                                }}></div>
                                 <div className="edificio-info">
                                     <p className="edificio-nombre">{edificio.nombre}</p>
                                     <p className="edificio-coste" style={{
