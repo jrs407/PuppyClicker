@@ -2,22 +2,27 @@
     background-color: #663c00;
     height: 100%;
     width: 25vw;
+    border: 1px solid #E39B3A;
 }
 
 .primer-tercio-parte-superior {
     background-color: #005780;
-    width: 100%;
+    border: 1px solid #E39B3A;
+    width: 24.9vw;
     height:7vh;
 }
 
 .primer-tercio-parte-central {
     background-color: #6e6d28;
-    width: 100%;
+    border: 1px solid #E39B3A;
+    width: 23.9vw;
     height: 30vh;
     display: flex;
     justify-content: center;
     align-items: center;
     margin-top: 26vh;
+    border-radius: 1.5vh;
+    margin-left: 1vh;
 }
 
 
@@ -29,6 +34,13 @@
     margin-top: 1vh;
     margin-left: 1vh;
     font-size: 1.5vh;
+    border: 1px solid #E39B3A;
+}
+
+
+.cerrar-sesion:hover {
+    background-color: #770101;
+    cursor: url('/src/assets/Cursor2.png'), pointer !important;
 }
 
 .descripcion {
@@ -46,15 +58,27 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    border: 1px solid #E39B3A;
 }
 
 .contador-clicker{
-    background-color: rgba(0, 0, 0, 0.8);
-    width: 100%;
-    height: 9vh;
+    background: linear-gradient(90deg, 
+                rgba(0, 0, 0, 0.43) 0%,
+                rgba(0, 0, 0, 0.44) 1%,  
+                rgba(0, 0, 0, 0.55) 20%, 
+                rgba(0, 0, 0, 0.55) 80%,
+                rgba(0, 0, 0, 0.44) 99%,  
+                rgba(0, 0, 0, 0.43) 100%);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    width: 50vh;
+    height: 7vh;
     display: flex;
     justify-content: center;
     align-items: center;
+    border-radius: 4vh;
+    box-shadow: 35px 0 55px rgba(0, 0, 0, 0.7),
+                -35px 0 55px rgba(0, 0, 0, 0.7);
 }
 
 
@@ -70,10 +94,12 @@
 .parte-central{
     width: 100%;
     margin-bottom: 12vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .segundo-tercio-central{
-    background-color: #014750;
     width: 100%;
     height: 42vh;
     display: flex;
@@ -123,10 +149,10 @@
     background-color: #4b0150;
     height: 100%;
     width: 25vw;
+    border: 1px solid #E39B3A;
 }
 
 .tercer-tercio-parte-superior {
-    background-color: #005780;
     width: 100%;
     min-height: 17vh;
     height: auto;
@@ -139,6 +165,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    border: 1px solid #E39B3A;
 }
 
 .tercer-tercio-parte-superior-titulo p{
