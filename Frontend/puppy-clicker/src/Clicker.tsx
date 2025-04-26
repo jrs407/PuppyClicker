@@ -113,6 +113,47 @@ const Clicker: React.FC = () => {
         }, 1500);
     };
 
+    const calcularPrecioEdificio = (precioInicial: number, numeroComprado: number): number => {
+        return Math.floor(precioInicial * Math.pow(1.15, numeroComprado));
+    };
+
+    const comprarEdificio = async (edificio: Edificio) => {
+        const precioActual = calcularPrecioEdificio(edificio.precioInicial, edificio.numeroComprado);
+        
+        if (puntos < precioActual) {
+            console.log('No hay suficientes puntos');
+            return;
+        }
+
+        try {
+            const response = await fetch('http://localhost:8080/api/comprar-edificio', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    idUsuario: userData.idUsuario,
+                    idEdificio: edificio.idEdificios
+                }),
+            });
+
+            const data = await response.json();
+            
+            if (data.success) {
+                setPuntos(data.puntos);
+                setEdificios(edificios.map(e => 
+                    e.idEdificios === edificio.idEdificios 
+                        ? { ...e, numeroComprado: data.numeroComprado }
+                        : e
+                ));
+            } else {
+                console.error('Error al comprar edificio:', data.error);
+            }
+        } catch (error) {
+            console.error('Error al comprar edificio:', error);
+        }
+    };
+
     return (
         <div className='fondo'>
             {clickImages.map(click => (
@@ -170,11 +211,17 @@ const Clicker: React.FC = () => {
 
                 <div className='lista-edificios'>
                     {edificios.map((edificio) => (
-                        <div key={edificio.idEdificios} className="edificio">
+                        <div 
+                            key={edificio.idEdificios} 
+                            className="edificio"
+                            onClick={() => comprarEdificio(edificio)}
+                        >
                             <div className="edificio-imagen"></div>
                             <div className="edificio-info">
                                 <p className="edificio-nombre">{edificio.nombre}</p>
-                                <p className="edificio-coste">{edificio.precioInicial}</p>
+                                <p className="edificio-coste">
+                                    {calcularPrecioEdificio(edificio.precioInicial, edificio.numeroComprado)}
+                                </p>
                             </div>
                             <span className="edificio-cantidad">{edificio.numeroComprado}</span>
                         </div>
