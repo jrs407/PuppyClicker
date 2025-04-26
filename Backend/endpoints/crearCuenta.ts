@@ -54,9 +54,15 @@ const crearCuentaHandler: express.RequestHandler = async (req, res) => {
             [usuario, hashedPassword]
         );
 
+        const [userData] = await pool.query<RowDataPacket[]>(
+            'SELECT idUsuario, usuario, puntos FROM Usuario WHERE usuario = ?',
+            [usuario]
+        );
+
         res.status(201).json({
             success: true,
-            message: 'Usuario creado exitosamente'
+            message: 'Usuario creado exitosamente',
+            userData: userData[0]
         });
     } catch (error) {
         console.error('Error al crear usuario:', error);

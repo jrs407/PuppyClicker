@@ -121,3 +121,51 @@
     height: 100%;
     width: 25vw;
 }
+
+.tercer-tercio-parte-superior {
+    background-color: #005780;
+    width: 100%;
+    min-height: 17vh;
+    height: auto;
+    overflow-y: auto;
+}
+
+.tercer-tercio-parte-superior-titulo {
+    background-color: #00804b;
+    width: 100%;
+    height:9vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.tercer-tercio-parte-superior-titulo p{
+    color: #e0e0e0;
+    font-size: 2.5vh;
+    font-weight: bold;
+}
+
+.tercer-tercio-parte-superior-mejoras {
+    background-color: #800060;
+    width: 24.5vw;
+    min-height: 8vh;
+    max-height: 20vh;
+    height: auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5vh;
+    padding: 0.5vh;
+}
+
+.mejora-item {
+    width: 7.5vh;
+    height: 7.5vh;
+    background-color: #4b0150;
+    border: 1px solid #E39B3A;
+    border-radius: 1vh;
+}
+
+.mejora-item:hover {
+    background-color: #6e0177;
+    cursor: url('/src/assets/Cursor2.png'), pointer !important;
+}

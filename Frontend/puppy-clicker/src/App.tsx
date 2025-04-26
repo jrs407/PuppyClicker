@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import IniciarSesion from './IniciarSesion';
 import Registrarse from './Registrarse';
-import Clicker from './clicker';
+import Clicker from './Clicker';
 
 function App() {
   return (
