@@ -34,7 +34,7 @@ const iniciarSesionHandler: express.RequestHandler = async (req, res) => {
         console.log('Query results:', rows);
 
         if (rows.length === 0) {
-            // Query the user separately to see if it exists
+
             const [userCheck] = await pool.query<RowDataPacket[]>(
                 'SELECT * FROM Usuario WHERE usuario = ?',
                 [usuario]
@@ -55,9 +55,16 @@ const iniciarSesionHandler: express.RequestHandler = async (req, res) => {
             return;
         }
 
+        const userData = {
+            idUsuario: rows[0].idUsuario,
+            usuario: rows[0].usuario,
+            puntos: rows[0].puntos
+        };
+
         res.status(200).json({
             success: true,
-            message: 'Inicio de sesión exitoso'
+            message: 'Inicio de sesión exitoso',
+            userData: userData
         });
     } catch (error) {
         console.error('Error al iniciar sesión:', error);

@@ -38,7 +38,7 @@ const IniciarSesion: React.FC = () => {
               }
   
               if (response.ok) {
-                  navigate('/home');
+                  navigate('/clicker', { state: { userData: data.userData } });
               } else {
                   setError(data.error || `Error ${response.status}: ${response.statusText}`);
               }
