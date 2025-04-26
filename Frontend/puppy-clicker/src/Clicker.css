@@ -108,7 +108,7 @@
 }
 
 .boton-clicker {
-    background-color: #4b0150;
+    background: #4b0150;
     width: 40vh;
     height: 40vh;
     border-radius: 50%;
@@ -124,7 +124,6 @@
 }
 
 .boton-clicker:hover {
-    background-color: #6e6d28;
     cursor: url('/src/assets/Cursor2.png'), pointer !important;
     -webkit-cursor: url('/src/assets/Cursor2.png'), pointer !important;
     -moz-cursor: url('/src/assets/Cursor2.png'), pointer !important;
@@ -132,11 +131,34 @@
 }
 
 .boton-clicker:active {
-    background-color: #6e6d28;
     cursor: url('/src/assets/Cursor2.png'), pointer !important;
     -webkit-cursor: url('/src/assets/Cursor2.png'), pointer !important;
     -moz-cursor: url('/src/assets/Cursor2.png'), pointer !important;
     animation: pulsarUnaVez 0.3s ease-out forwards;
+}
+
+.click-image {
+    position: absolute;
+    width: 42px;
+    height: 42px;
+    pointer-events: none;
+    animation: fadeOut 1.5s ease-out forwards;
+    z-index: 1000;
+}
+
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+    50% {
+        opacity: 0.5;
+        transform: translate(-50%, -75%) scale(0.75);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -100%) scale(0.5);
+    }
 }
 
 @keyframes pulsarUnaVez {
