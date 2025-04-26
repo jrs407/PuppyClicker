@@ -21,11 +21,11 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Usuario` (
   `idUsuario` INT NOT NULL AUTO_INCREMENT,
   `usuario` VARCHAR(45) NOT NULL,
   `contrasena` LONGTEXT NOT NULL,
-  `estaEliminado` TINYINT(1) NULL,
-  `puntos` INT NULL,
+  `estaEliminado` TINYINT(1) DEFAULT 0,
+  `puntos` INT DEFAULT 0,
   PRIMARY KEY (`idUsuario`),
   UNIQUE INDEX `usuario_UNIQUE` (`usuario` ASC) VISIBLE)
-ENGINE = InnoDB;
+ENGINE = InnoDB AUTO_INCREMENT = 1;
 
 
 -- -----------------------------------------------------
@@ -47,6 +47,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Edificios` (
   `raza` VARCHAR(45) NULL,
   `precioInicial` INT NULL,
   `Descripciones_idDescripciones` INT NOT NULL,
+  `produccionInicial` INT NULL,
   PRIMARY KEY (`idEdificios`),
   INDEX `fk_Edificios_Descripciones1_idx` (`Descripciones_idDescripciones` ASC) VISIBLE,
   CONSTRAINT `fk_Edificios_Descripciones1`
@@ -55,6 +56,28 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Edificios` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Data for table `mydb`.`Edificios`
+-- -----------------------------------------------------
+INSERT INTO Edificios (idEdificios, nombre, raza, precioInicial, Descripciones_idDescripciones, produccionInicial) 
+VALUES (1, 'Pug', 'pug', 15, 1, 1);
+INSERT INTO Edificios (idEdificios, nombre, raza, precioInicial, Descripciones_idDescripciones, produccionInicial) 
+VALUES (2, 'Chihuahua', 'chihuahua', 100, 1, 2);
+INSERT INTO Edificios (idEdificios, nombre, raza, precioInicial, Descripciones_idDescripciones, produccionInicial) 
+VALUES (3, 'Poodle', 'poodle', 1100, 1, 10);
+INSERT INTO Edificios (idEdificios, nombre, raza, precioInicial, Descripciones_idDescripciones, produccionInicial) 
+VALUES (4, 'Pomeranian', 'pomeranian', 12000, 1, 50);
+INSERT INTO Edificios (idEdificios, nombre, raza, precioInicial, Descripciones_idDescripciones, produccionInicial) 
+VALUES (5, 'Terrier', 'terrier', 130000, 1, 300);
+INSERT INTO Edificios (idEdificios, nombre, raza, precioInicial, Descripciones_idDescripciones, produccionInicial) 
+VALUES (6, 'Retriever', 'retriever', 15000000, 1, 1500);
+INSERT INTO Edificios (idEdificios, nombre, raza, precioInicial, Descripciones_idDescripciones, produccionInicial) 
+VALUES (7, 'Collie', 'collie', 20000000, 1, 8000);
+INSERT INTO Edificios (idEdificios, nombre, raza, precioInicial, Descripciones_idDescripciones, produccionInicial) 
+VALUES (8, 'Husky', 'husky', 300000000, 1, 50000);
+INSERT INTO Edificios (idEdificios, nombre, raza, precioInicial, Descripciones_idDescripciones, produccionInicial) 
+VALUES (9, 'Shiba', 'Shiba', 1000000000, 1, 500000);
 
 
 -- -----------------------------------------------------

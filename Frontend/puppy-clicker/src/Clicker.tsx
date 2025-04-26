@@ -28,11 +28,21 @@ interface ClickImage {
     src: string;
 }
 
+interface Edificio {
+    idEdificios: number;
+    nombre: string;
+    raza: string;
+    precioInicial: number;
+    produccionInicial: number;
+    numeroComprado: number;
+}
+
 const Clicker: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const [clickImages, setClickImages] = useState<ClickImage[]>([]);
     const [puntos, setPuntos] = useState(0);
+    const [edificios, setEdificios] = useState<Edificio[]>([]);
     const { userData } = location.state as LocationState || { 
         userData: { 
             idUsuario: 0,
@@ -41,11 +51,27 @@ const Clicker: React.FC = () => {
         } 
     };
 
+    const cargarEdificios = async () => {
+        try {
+            const response = await fetch(`http://localhost:8080/api/edificios/${userData.idUsuario}`);
+            const data = await response.json();
+            
+            if (data.success) {
+                setEdificios(data.edificios);
+            } else {
+                console.error('Error al cargar edificios:', data.error);
+            }
+        } catch (error) {
+            console.error('Error al cargar edificios:', error);
+        }
+    };
+
     React.useEffect(() => {
         if (!userData?.usuario) {
             navigate('/login');
         }
         setPuntos(userData?.puntos || 0);
+        cargarEdificios();
     }, [userData, navigate]);
 
     const registrarClick = async () => {
@@ -120,7 +146,7 @@ const Clicker: React.FC = () => {
                             className='boton-clicker' 
                             onClick={handleClick}
                             style={{
-                                backgroundImage: 'url("https://i.pinimg.com/736x/f9/c5/9a/f9c59a1139f2ddf1f36ffc702f4b1d0e.jpg")',
+                                backgroundImage: 'url("https://i1.sndcdn.com/artworks-x8zI2HVC2pnkK7F5-4xKLyA-t1080x1080.jpg")',
                                 backgroundSize: 'cover',
                                 backgroundPosition: 'center'
                             }}
@@ -143,14 +169,14 @@ const Clicker: React.FC = () => {
                 </div>
 
                 <div className='lista-edificios'>
-                    {[...Array(9)].map((_, index) => (
-                        <div key={index} className="edificio">
+                    {edificios.map((edificio) => (
+                        <div key={edificio.idEdificios} className="edificio">
                             <div className="edificio-imagen"></div>
                             <div className="edificio-info">
-                                <p className="edificio-nombre">Patata</p>
-                                <p className="edificio-coste">0</p>
+                                <p className="edificio-nombre">{edificio.nombre}</p>
+                                <p className="edificio-coste">{edificio.precioInicial}</p>
                             </div>
-                            <span className="edificio-cantidad">100</span>
+                            <span className="edificio-cantidad">{edificio.numeroComprado}</span>
                         </div>
                     ))}
                 </div>

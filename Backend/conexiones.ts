@@ -4,6 +4,7 @@ import { dbConfig } from './config/database';
 import crearCuenta from './endpoints/crearCuenta';
 import iniciarSesion from './endpoints/iniciarSesion';
 import click from './endpoints/click';
+import listaEdificios from './endpoints/listaEdificios';
 
 const router = express.Router();
 
@@ -27,5 +28,6 @@ router.get('/test', async (req: any, res) => {
 router.use('/cuenta', crearCuenta);
 router.use('/iniciar-sesion', iniciarSesion);
 router.use('/click', click);
+router.use('/edificios', listaEdificios);
 
 export default router;

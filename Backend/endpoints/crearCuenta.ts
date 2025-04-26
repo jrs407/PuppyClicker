@@ -7,7 +7,7 @@ const router = express.Router();
 const hashPassword = (password: string): string => {
     return crypto
         .createHash('sha256')
-        .update(password + 'puppysalt')  // Salt fijo para mayor simplicidad
+        .update(password + 'puppysalt')
         .digest('hex');
 };
 
@@ -20,7 +20,7 @@ const crearCuentaHandler: express.RequestHandler = async (req, res) => {
     const pool = (req as any).db as Pool;
 
     try {
-        // Validate passwords match
+
         if (contrasena1 !== contrasena2) {
             res.status(400).json({
                 success: false,
@@ -50,7 +50,7 @@ const crearCuentaHandler: express.RequestHandler = async (req, res) => {
         });
 
         await pool.query(
-            'INSERT INTO Usuario (idUsuario, usuario, contrasena, estaEliminado, puntos) VALUES (NULL, ?, ?, 0, 0)',
+            'INSERT INTO Usuario (usuario, contrasena, estaEliminado, puntos) VALUES (?, ?, 0, 0)',
             [usuario, hashedPassword]
         );
 
@@ -59,10 +59,44 @@ const crearCuentaHandler: express.RequestHandler = async (req, res) => {
             [usuario]
         );
 
+        const [edificios] = await pool.query<RowDataPacket[]>(
+            'SELECT * FROM Edificios'  // Cambiado para obtener todos los datos de los edificios
+        );
+
+        console.log('Número total de edificios en la tabla:', edificios.length);
+        console.log('Edificios encontrados:', edificios);
+
+        const userId = userData[0].idUsuario;
+        
+        // Insertar edificios uno por uno para evitar problemas de sintaxis
+        for (const edificio of edificios) {
+            await pool.query(
+                'INSERT INTO Edificios_has_Usuario (Edificios_idEdificios, Usuario_idUsuario, numeroComprado) VALUES (?, ?, ?)',
+                [edificio.idEdificios, userId, 0]
+            );
+        }
+
+        // Obtener los edificios del usuario recién creado
+        const [edificiosUsuario] = await pool.query<RowDataPacket[]>(
+            `SELECT 
+                e.idEdificios,
+                e.nombre,
+                e.raza,
+                e.precioInicial,
+                e.produccionInicial,
+                CAST(eu.numeroComprado AS SIGNED) as numeroComprado
+            FROM Edificios e
+            JOIN Edificios_has_Usuario eu ON e.idEdificios = eu.Edificios_idEdificios
+            WHERE eu.Usuario_idUsuario = ?
+            ORDER BY e.idEdificios`,
+            [userId]
+        );
+
         res.status(201).json({
             success: true,
             message: 'Usuario creado exitosamente',
-            userData: userData[0]
+            userData: userData[0],
+            edificios: edificiosUsuario
         });
     } catch (error) {
         console.error('Error al crear usuario:', error);
