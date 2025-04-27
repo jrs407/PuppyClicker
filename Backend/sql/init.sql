@@ -71,7 +71,7 @@ VALUES (4, 'Pomeranian', 'pomeranian', 12000, 1, 50);
 INSERT INTO Edificios (idEdificios, nombre, raza, precioInicial, Descripciones_idDescripciones, produccionInicial) 
 VALUES (5, 'Terrier', 'terrier', 130000, 1, 300);
 INSERT INTO Edificios (idEdificios, nombre, raza, precioInicial, Descripciones_idDescripciones, produccionInicial) 
-VALUES (6, 'Retriever', 'retriever', 15000000, 1, 1500);
+VALUES (6, 'Retriever', 'retriever', 1500000, 1, 1500);
 INSERT INTO Edificios (idEdificios, nombre, raza, precioInicial, Descripciones_idDescripciones, produccionInicial) 
 VALUES (7, 'Collie', 'collie', 20000000, 1, 8000);
 INSERT INTO Edificios (idEdificios, nombre, raza, precioInicial, Descripciones_idDescripciones, produccionInicial) 
