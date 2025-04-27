@@ -116,24 +116,20 @@ const Clicker: React.FC = () => {
         }
         setPuntos(userData?.puntos || 0);
         
-        // Cargar edificios solo una vez al inicio
         cargarEdificios();
-    }, [userData, navigate]); // Removido edificios de las dependencias
+    }, [userData, navigate]);
 
-    // Efecto separado para calcular la producción
     React.useEffect(() => {
         setProduccionPorSegundo(calcularProduccionTotal(edificios));
     }, [edificios]);
 
-    // Efecto separado para la generación de puntos
     React.useEffect(() => {
         if (produccionPorSegundo <= 0) return;
 
         const intervalo = setInterval(() => {
             const puntosGenerados = produccionPorSegundo;
             setPuntos(prev => prev + puntosGenerados);
-            
-            // Actualizar backend en cada tick
+
             actualizarPuntos(puntosGenerados);
         }, 1000);
 
@@ -307,8 +303,8 @@ const Clicker: React.FC = () => {
                                     backgroundColor:
                                         puedeComprar
                                             ? (hoveredId === edificio.idEdificios 
-                                                ? '#5E503E'  /* más claro al hover */
-                                                : '#463A2F') /* estado comprable normal */
+                                                ? '#5E503E' 
+                                                : '#463A2F') 
                                             : '#332B24',
                                     cursor: puedeComprar 
                                         ? 'url("/src/assets/Cursor2.png"), pointer' 
