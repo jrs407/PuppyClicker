@@ -6,6 +6,7 @@ import iniciarSesion from './endpoints/iniciarSesion';
 import click from './endpoints/click';
 import listaEdificios from './endpoints/listaEdificios';
 import comprarEdificio from './endpoints/comprarEdificio';
+import actualizarPuntos from './endpoints/actualizarPuntos';
 
 const router = express.Router();
 
@@ -31,5 +32,6 @@ router.use('/iniciar-sesion', iniciarSesion);
 router.use('/click', click);
 router.use('/edificios', listaEdificios);
 router.use('/comprar-edificio', comprarEdificio);
+router.use('/actualizar-puntos', actualizarPuntos);
 
 export default router;

@@ -62,6 +62,7 @@ const Clicker: React.FC = () => {
         } 
     };
     const [hoveredId, setHoveredId] = useState<number | null>(null);
+    const [produccionPorSegundo, setProduccionPorSegundo] = useState(0);
 
 
     const cargarEdificios = async () => {
@@ -79,13 +80,67 @@ const Clicker: React.FC = () => {
         }
     };
 
+    const calcularProduccionTotal = (edificios: Edificio[]): number => {
+        return edificios.reduce((total, edificio) => {
+            return total + (edificio.produccionInicial * edificio.numeroComprado);
+        }, 0);
+    };
+
+    const actualizarPuntos = async (puntosGenerados: number) => {
+        if (puntosGenerados <= 0) return;
+        
+        try {
+            const response = await fetch('http://localhost:8080/api/actualizar-puntos', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    idUsuario: userData.idUsuario,
+                    puntos: puntosGenerados
+                }),
+            });
+
+            if (!response.ok) {
+                console.error('Error al actualizar puntos');
+            }
+        } catch (error) {
+            console.error('Error al actualizar puntos:', error);
+        }
+    };
+
     React.useEffect(() => {
         if (!userData?.usuario) {
             navigate('/login');
+            return;
         }
         setPuntos(userData?.puntos || 0);
+        
+        // Cargar edificios solo una vez al inicio
         cargarEdificios();
-    }, [userData, navigate]);
+    }, [userData, navigate]); // Removido edificios de las dependencias
+
+    // Efecto separado para calcular la producción
+    React.useEffect(() => {
+        setProduccionPorSegundo(calcularProduccionTotal(edificios));
+    }, [edificios]);
+
+    // Efecto separado para la generación de puntos
+    React.useEffect(() => {
+        if (produccionPorSegundo <= 0) return;
+
+        const intervalo = setInterval(() => {
+            const puntosGenerados = produccionPorSegundo;
+            setPuntos(prev => prev + puntosGenerados);
+            
+            // Actualizar backend en cada tick
+            actualizarPuntos(puntosGenerados);
+        }, 1000);
+
+        return () => {
+            clearInterval(intervalo);
+        };
+    }, [produccionPorSegundo]);
 
     const registrarClick = async () => {
         try {
