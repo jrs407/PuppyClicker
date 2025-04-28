@@ -182,6 +182,24 @@ VALUES (10, 10, 'shiba');
 -- -----------------------------------------------------
 -- Data for table `mydb`.`Mejoras`
 -- -----------------------------------------------------
+
+-- Mejoras de Click
+INSERT INTO Mejoras (idMejoras, nombre, descripcion, precio, TipoMejora_idTipoMejora)
+VALUES (71, 'Mejora de click 1', 'Duplica la producción de clicks', '150', 1);
+INSERT INTO Mejoras (idMejoras, nombre, descripcion, precio, TipoMejora_idTipoMejora)
+VALUES (72, 'Mejora de click 2', 'Duplica la producción de clicks', '750', 1);
+INSERT INTO Mejoras (idMejoras, nombre, descripcion, precio, TipoMejora_idTipoMejora)
+VALUES (73, 'Mejora de click 3', 'Duplica la producción de clicks', '15000', 1);
+INSERT INTO Mejoras (idMejoras, nombre, descripcion, precio, TipoMejora_idTipoMejora)
+VALUES (74, 'Mejora de click 4', 'Duplica la producción de clicks', '150000', 1);
+INSERT INTO Mejoras (idMejoras, nombre, descripcion, precio, TipoMejora_idTipoMejora)
+VALUES (75, 'Mejora de click 5', 'Duplica la producción de clicks', '1500000', 1);
+INSERT INTO Mejoras (idMejoras, nombre, descripcion, precio, TipoMejora_idTipoMejora)
+VALUES (76, 'Mejora de click 6', 'Duplica la producción de clicks', '150000000', 1);
+INSERT INTO Mejoras (idMejoras, nombre, descripcion, precio, TipoMejora_idTipoMejora)
+VALUES (77, 'Mejora de click 7', 'Duplica la producción de clicks', '1500000000', 1);
+
+-- Mejoras de Pug
 INSERT INTO Mejoras (idMejoras, nombre, descripcion, precio, TipoMejora_idTipoMejora)
 VALUES (1, 'Mejora de pug 1', 'Duplica la producción de Pugs', '100', 2);
 INSERT INTO Mejoras (idMejoras, nombre, descripcion, precio, TipoMejora_idTipoMejora)
