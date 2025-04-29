@@ -48,12 +48,23 @@ interface Edificio {
     numeroComprado: number;
 }
 
+interface Mejora {
+    idMejoras: number;
+    nombre: string;
+    descripcion: string;
+    precio: string;
+    nombrePNG: string;
+    categoria: number;
+    tipoMejora: string;
+}
+
 const Clicker: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const [clickImages, setClickImages] = useState<ClickImage[]>([]);
     const [puntos, setPuntos] = useState(0);
     const [edificios, setEdificios] = useState<Edificio[]>([]);
+    const [mejoras, setMejoras] = useState<Mejora[]>([]);
     const { userData } = location.state as LocationState || { 
         userData: { 
             idUsuario: 0,
@@ -77,6 +88,24 @@ const Clicker: React.FC = () => {
             }
         } catch (error) {
             console.error('Error al cargar edificios:', error);
+        }
+    };
+
+    const cargarMejoras = async () => {
+        try {
+            const response = await fetch(`http://localhost:8080/api/mejoras/${userData.idUsuario}`);
+            const data = await response.json();
+            
+            if (data.success) {
+                const mejorasOrdenadas = data.mejoras.sort((a: Mejora, b: Mejora) => {
+                    return parseInt(a.precio) - parseInt(b.precio);
+                });
+                setMejoras(mejorasOrdenadas);
+            } else {
+                console.error('Error al cargar mejoras:', data.error);
+            }
+        } catch (error) {
+            console.error('Error al cargar mejoras:', error);
         }
     };
 
@@ -117,6 +146,7 @@ const Clicker: React.FC = () => {
         setPuntos(userData?.puntos || 0);
         
         cargarEdificios();
+        cargarMejoras();
     }, [userData, navigate]);
 
     React.useEffect(() => {
@@ -282,8 +312,19 @@ const Clicker: React.FC = () => {
                     </div>
 
                     <div className = 'tercer-tercio-parte-superior-mejoras'>
-                        {[...Array(18)].map((_, index) => (
-                            <div key={index} className="mejora-item" />
+                        {mejoras.map((mejora) => (
+                            <div key={mejora.idMejoras} className="mejora-item">
+                                <img 
+                                    src={`/src/assets/iconoMejora/${mejora.nombrePNG}.png`}
+                                    alt={mejora.nombre}
+                                    title={`${mejora.nombre}\n${mejora.descripcion}\nPrecio: ${mejora.precio}`}
+                                    style={{
+                                        width: '100%',
+                                        height: '100%',
+                                        objectFit: 'contain'
+                                    }}
+                                />
+                            </div>
                         ))}
                     </div>
                 </div>
