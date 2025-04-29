@@ -248,6 +248,41 @@ const Clicker: React.FC = () => {
         }
     };
 
+    const comprarMejora = async (mejora: Mejora) => {
+        const precioMejora = parseInt(mejora.precio);
+        
+        if (puntos < precioMejora) {
+            console.log('No hay suficientes puntos');
+            return;
+        }
+
+        try {
+            const response = await fetch('http://localhost:8080/api/comprar-mejora', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    idUsuario: userData.idUsuario,
+                    idMejora: mejora.idMejoras
+                }),
+            });
+
+            const data = await response.json();
+            
+            if (data.success) {
+                setPuntos(data.puntos);
+
+                setMejoras(mejoras.filter(m => m.idMejoras !== mejora.idMejoras));
+
+            } else {
+                console.error('Error al comprar mejora:', data.error);
+            }
+        } catch (error) {
+            console.error('Error al comprar mejora:', error);
+        }
+    };
+
     const getEdificioIcon = (raza: string): string => {
         const iconMap: { [key: string]: string } = {
             'pug': pugIcon,
@@ -312,20 +347,33 @@ const Clicker: React.FC = () => {
                     </div>
 
                     <div className = 'tercer-tercio-parte-superior-mejoras'>
-                        {mejoras.map((mejora) => (
-                            <div key={mejora.idMejoras} className="mejora-item">
-                                <img 
-                                    src={`/src/assets/iconoMejora/${mejora.nombrePNG}.png`}
-                                    alt={mejora.nombre}
-                                    title={`${mejora.nombre}\n${mejora.descripcion}\nPrecio: ${mejora.precio}`}
+                        {mejoras.map((mejora) => {
+                            const puedeComprar = puntos >= parseInt(mejora.precio);
+                            return (
+                                <div 
+                                    key={mejora.idMejoras} 
+                                    className="mejora-item"
+                                    onClick={() => puedeComprar && comprarMejora(mejora)}
                                     style={{
-                                        width: '100%',
-                                        height: '100%',
-                                        objectFit: 'contain'
+                                        cursor: puedeComprar 
+                                            ? 'url("/src/assets/Cursor2.png"), pointer' 
+                                            : 'url("/src/assets/Cursor1.png"), not-allowed',
+                                        opacity: puedeComprar ? 1 : 0.6
                                     }}
-                                />
-                            </div>
-                        ))}
+                                >
+                                    <img 
+                                        src={`/src/assets/iconoMejora/${mejora.nombrePNG}.png`}
+                                        alt={mejora.nombre}
+                                        title={`${mejora.nombre}\n${mejora.descripcion}\nPrecio: ${mejora.precio}`}
+                                        style={{
+                                            width: '100%',
+                                            height: '100%',
+                                            objectFit: 'contain'
+                                        }}
+                                    />
+                                </div>
+                            );
+                        })}
                     </div>
                 </div>
 
