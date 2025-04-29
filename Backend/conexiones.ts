@@ -8,6 +8,7 @@ import listaEdificios from './endpoints/listaEdificios';
 import comprarEdificio from './endpoints/comprarEdificio';
 import actualizarPuntos from './endpoints/actualizarPuntos';
 import obtenerMejoras from './endpoints/obtenerMejoras';
+import comprarMejora from './endpoints/comprarMejora';
 
 const router = express.Router();
 
@@ -35,5 +36,6 @@ router.use('/edificios', listaEdificios);
 router.use('/comprar-edificio', comprarEdificio);
 router.use('/actualizar-puntos', actualizarPuntos);
 router.use('/mejoras', obtenerMejoras);
+router.use('/comprar-mejora', comprarMejora);
 
 export default router;
