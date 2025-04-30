@@ -44,7 +44,7 @@ services:
       MYSQL_USER: user
       MYSQL_PASSWORD: puppypassword
     ports:
-      - "3307:3306"  # Cambiado de 3306:3306 a 3307:3306
+      - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
       - ./Backend/sql:/docker-entrypoint-initdb.d

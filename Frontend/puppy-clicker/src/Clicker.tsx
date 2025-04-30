@@ -48,12 +48,31 @@ interface Edificio {
     numeroComprado: number;
 }
 
+interface Mejora {
+    idMejoras: number;
+    nombre: string;
+    descripcion: string;
+    precio: string;
+    nombrePNG: string;
+    categoria: number;
+    tipoMejora: string;
+}
+
+interface MejoraComprada {
+    idMejoras: number;
+    nombre: string;
+    categoria: number;
+    tipoMejora: string;
+}
+
 const Clicker: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const [clickImages, setClickImages] = useState<ClickImage[]>([]);
     const [puntos, setPuntos] = useState(0);
     const [edificios, setEdificios] = useState<Edificio[]>([]);
+    const [mejoras, setMejoras] = useState<Mejora[]>([]);
+    const [mejorasCompradas, setMejorasCompradas] = useState<MejoraComprada[]>([]);
     const { userData } = location.state as LocationState || { 
         userData: { 
             idUsuario: 0,
@@ -80,9 +99,60 @@ const Clicker: React.FC = () => {
         }
     };
 
+    const cargarMejoras = async () => {
+        try {
+            const response = await fetch(`http://localhost:8080/api/mejoras/${userData.idUsuario}`);
+            const data = await response.json();
+            
+            if (data.success) {
+                const mejorasOrdenadas = data.mejoras.sort((a: Mejora, b: Mejora) => {
+                    return parseInt(a.precio) - parseInt(b.precio);
+                });
+                setMejoras(mejorasOrdenadas);
+            } else {
+                console.error('Error al cargar mejoras:', data.error);
+            }
+        } catch (error) {
+            console.error('Error al cargar mejoras:', error);
+        }
+    };
+
+    const cargarMejorasCompradas = async () => {
+        try {
+            const response = await fetch(`http://localhost:8080/api/mejoras-compradas/${userData.idUsuario}`);
+            const data = await response.json();
+            
+            if (data.success) {
+                setMejorasCompradas(data.mejoras);
+            } else {
+                console.error('Error al cargar mejoras compradas:', data.error);
+            }
+        } catch (error) {
+            console.error('Error al cargar mejoras compradas:', error);
+        }
+    };
+
+    const calcularMultiplicadoresPorTipo = () => {
+        const multiplicadores: { [key: string]: number } = {};
+        
+        mejorasCompradas.forEach(mejora => {
+            // Inicializar multiplicador si no existe
+            if (!multiplicadores[mejora.tipoMejora]) {
+                multiplicadores[mejora.tipoMejora] = 1;
+            }
+            // Cada mejora duplica la producción
+            multiplicadores[mejora.tipoMejora] *= 2;
+        });
+        
+        return multiplicadores;
+    };
+
     const calcularProduccionTotal = (edificios: Edificio[]): number => {
+        const multiplicadores = calcularMultiplicadoresPorTipo();
+        
         return edificios.reduce((total, edificio) => {
-            return total + (edificio.produccionInicial * edificio.numeroComprado);
+            const multiplicador = multiplicadores[edificio.raza] || 1;
+            return total + (edificio.produccionInicial * edificio.numeroComprado * multiplicador);
         }, 0);
     };
 
@@ -116,24 +186,22 @@ const Clicker: React.FC = () => {
         }
         setPuntos(userData?.puntos || 0);
         
-        // Cargar edificios solo una vez al inicio
         cargarEdificios();
-    }, [userData, navigate]); // Removido edificios de las dependencias
+        cargarMejoras();
+        cargarMejorasCompradas();
+    }, [userData, navigate]);
 
-    // Efecto separado para calcular la producción
     React.useEffect(() => {
         setProduccionPorSegundo(calcularProduccionTotal(edificios));
-    }, [edificios]);
+    }, [edificios, mejorasCompradas]); // Añadir mejorasCompradas como dependencia
 
-    // Efecto separado para la generación de puntos
     React.useEffect(() => {
         if (produccionPorSegundo <= 0) return;
 
         const intervalo = setInterval(() => {
             const puntosGenerados = produccionPorSegundo;
             setPuntos(prev => prev + puntosGenerados);
-            
-            // Actualizar backend en cada tick
+
             actualizarPuntos(puntosGenerados);
         }, 1000);
 
@@ -142,20 +210,28 @@ const Clicker: React.FC = () => {
         };
     }, [produccionPorSegundo]);
 
+    const calcularMultiplicadorClick = (): number => {
+        return mejorasCompradas
+            .filter(mejora => mejora.tipoMejora === 'click')
+            .reduce((mult, _) => mult * 2, 1);
+    };
+
     const registrarClick = async () => {
         try {
+            const multiplicadorClick = calcularMultiplicadorClick();
             const response = await fetch('http://localhost:8080/api/click', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    idUsuario: userData.idUsuario
+                    idUsuario: userData.idUsuario,
+                    multiplicador: multiplicadorClick
                 }),
             });
 
             if (response.ok) {
-                setPuntos(prev => prev + 1);
+                setPuntos(prev => prev + multiplicadorClick);
             }
         } catch (error) {
             console.error('Error al registrar click:', error);
@@ -222,6 +298,41 @@ const Clicker: React.FC = () => {
         }
     };
 
+    const comprarMejora = async (mejora: Mejora) => {
+        const precioMejora = parseInt(mejora.precio);
+        
+        if (puntos < precioMejora) {
+            console.log('No hay suficientes puntos');
+            return;
+        }
+
+        try {
+            const response = await fetch('http://localhost:8080/api/comprar-mejora', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    idUsuario: userData.idUsuario,
+                    idMejora: mejora.idMejoras
+                }),
+            });
+
+            const data = await response.json();
+            
+            if (data.success) {
+                setPuntos(data.puntos);
+                setMejoras(mejoras.filter(m => m.idMejoras !== mejora.idMejoras));
+                // Recargar las mejoras compradas para actualizar los multiplicadores
+                await cargarMejorasCompradas();
+            } else {
+                console.error('Error al comprar mejora:', data.error);
+            }
+        } catch (error) {
+            console.error('Error al comprar mejora:', error);
+        }
+    };
+
     const getEdificioIcon = (raza: string): string => {
         const iconMap: { [key: string]: string } = {
             'pug': pugIcon,
@@ -264,6 +375,7 @@ const Clicker: React.FC = () => {
                 <div className= 'parte-central'>
                     <div className='contador-clicker'>
                         <p className='numero-clicker'>{puntos}</p>
+                        <p className='produccion-actual'>{produccionPorSegundo} por segundo</p>
                     </div>
                     <div className='segundo-tercio-central'>
                         <div 
@@ -286,9 +398,33 @@ const Clicker: React.FC = () => {
                     </div>
 
                     <div className = 'tercer-tercio-parte-superior-mejoras'>
-                        {[...Array(18)].map((_, index) => (
-                            <div key={index} className="mejora-item" />
-                        ))}
+                        {mejoras.map((mejora) => {
+                            const puedeComprar = puntos >= parseInt(mejora.precio);
+                            return (
+                                <div 
+                                    key={mejora.idMejoras} 
+                                    className="mejora-item"
+                                    onClick={() => puedeComprar && comprarMejora(mejora)}
+                                    style={{
+                                        cursor: puedeComprar 
+                                            ? 'url("/src/assets/Cursor2.png"), pointer' 
+                                            : 'url("/src/assets/Cursor1.png"), not-allowed',
+                                        opacity: puedeComprar ? 1 : 0.6
+                                    }}
+                                >
+                                    <img 
+                                        src={`/src/assets/iconoMejora/${mejora.nombrePNG}.png`}
+                                        alt={mejora.nombre}
+                                        title={`${mejora.nombre}\n${mejora.descripcion}\nPrecio: ${mejora.precio}`}
+                                        style={{
+                                            width: '100%',
+                                            height: '100%',
+                                            objectFit: 'contain'
+                                        }}
+                                    />
+                                </div>
+                            );
+                        })}
                     </div>
                 </div>
 
@@ -307,8 +443,8 @@ const Clicker: React.FC = () => {
                                     backgroundColor:
                                         puedeComprar
                                             ? (hoveredId === edificio.idEdificios 
-                                                ? '#5E503E'  /* más claro al hover */
-                                                : '#463A2F') /* estado comprable normal */
+                                                ? '#5E503E' 
+                                                : '#463A2F') 
                                             : '#332B24',
                                     cursor: puedeComprar 
                                         ? 'url("/src/assets/Cursor2.png"), pointer' 

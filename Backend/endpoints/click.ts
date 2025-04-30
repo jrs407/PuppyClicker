@@ -4,8 +4,9 @@ import { Pool, RowDataPacket } from 'mysql2/promise';
 const router = express.Router();
 
 const clickHandler: express.RequestHandler = async (req, res) => {
-    const { idUsuario } = req.body as {
+    const { idUsuario, multiplicador } = req.body as {
         idUsuario: number;
+        multiplicador: number;
     };
     const pool = (req as any).db as Pool;
 
@@ -24,8 +25,8 @@ const clickHandler: express.RequestHandler = async (req, res) => {
         }
 
         await pool.query(
-            'UPDATE Usuario SET puntos = puntos + 1 WHERE idUsuario = ?',
-            [idUsuario]
+            'UPDATE Usuario SET puntos = puntos + ? WHERE idUsuario = ?',
+            [multiplicador, idUsuario]
         );
         
         res.status(200).json({
