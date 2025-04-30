@@ -82,7 +82,34 @@ const Clicker: React.FC = () => {
     };
     const [hoveredId, setHoveredId] = useState<number | null>(null);
     const [produccionPorSegundo, setProduccionPorSegundo] = useState(0);
+    const [dogImage, setDogImage] = useState<string>('https://i.pinimg.com/736x/f9/c5/9a/f9c59a1139f2ddf1f36ffc702f4b1d0e.jpg');
+    const [lastFetch, setLastFetch] = useState<number>(0);
+    const FETCH_DELAY = 1000;
 
+    const throttledFetchDog = async () => {
+        const now = Date.now();
+        if (now - lastFetch >= FETCH_DELAY) {
+            await fetchRandomDog();
+            setLastFetch(now);
+        }
+    };
+
+    const fetchRandomDog = async () => {
+        try {
+            const response = await fetch('https://dog.ceo/api/breeds/image/random');
+            const data = await response.json();
+            if (data.status === 'success') {
+                setDogImage(data.message);
+            }
+        } catch (error) {
+            console.error('Error fetching dog image:', error);
+            // Si falla, se mantiene la imagen placeholder actual
+        }
+    };
+
+    React.useEffect(() => {
+        fetchRandomDog();
+    }, []);
 
     const cargarEdificios = async () => {
         try {
@@ -213,7 +240,7 @@ const Clicker: React.FC = () => {
     const calcularMultiplicadorClick = (): number => {
         return mejorasCompradas
             .filter(mejora => mejora.tipoMejora === 'click')
-            .reduce((mult, _) => mult * 2, 1);
+            .reduce((mult) => mult * 2, 1);
     };
 
     const registrarClick = async () => {
@@ -251,6 +278,7 @@ const Clicker: React.FC = () => {
 
         setClickImages(prev => [...prev, newClick]);
         await registrarClick();
+        await throttledFetchDog();
         
         setTimeout(() => {
             setClickImages(prev => prev.filter(click => click.id !== newClick.id));
@@ -382,7 +410,7 @@ const Clicker: React.FC = () => {
                             className='boton-clicker' 
                             onClick={handleClick}
                             style={{
-                                backgroundImage: 'url("https://i.pinimg.com/736x/f9/c5/9a/f9c59a1139f2ddf1f36ffc702f4b1d0e.jpg")',
+                                backgroundImage: `url("${dogImage}")`,
                                 backgroundSize: 'cover',
                                 backgroundPosition: 'center'
                             }}
