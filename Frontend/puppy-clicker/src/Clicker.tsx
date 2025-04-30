@@ -70,6 +70,7 @@ const Clicker: React.FC = () => {
     const location = useLocation();
     const [clickImages, setClickImages] = useState<ClickImage[]>([]);
     const [puntos, setPuntos] = useState(0);
+    const [descripcionAleatoria, setDescripcionAleatoria] = useState('¡Bienvenido!');
     const [edificios, setEdificios] = useState<Edificio[]>([]);
     const [mejoras, setMejoras] = useState<Mejora[]>([]);
     const [mejorasCompradas, setMejorasCompradas] = useState<MejoraComprada[]>([]);
@@ -107,9 +108,35 @@ const Clicker: React.FC = () => {
         }
     };
 
+    const obtenerDescripcionAleatoria = async () => {
+        try {
+            const response = await fetch('http://localhost:8080/api/descripciones');
+            const data = await response.json();
+            
+            if (data.success && data.descripciones && data.descripciones.length > 0) {
+                const randomIndex = Math.floor(Math.random() * data.descripciones.length);
+                setDescripcionAleatoria(data.descripciones[randomIndex].descripcion);
+            } else {
+                console.error('Error al obtener descripción:', data.error);
+                setDescripcionAleatoria('¡Bienvenido!');
+            }
+        } catch (error) {
+            console.error('Error al obtener descripción:', error);
+            setDescripcionAleatoria('¡Bienvenido!');
+        }
+    };
+
+    // Nuevo useEffect para actualizar descripciones cada 10 segundos
     React.useEffect(() => {
-        fetchRandomDog();
-    }, []);
+        // Obtener la primera descripción al montar el componente
+        obtenerDescripcionAleatoria();
+
+        // Configurar el intervalo para actualizar cada 10 segundos
+        const intervalo = setInterval(obtenerDescripcionAleatoria, 10000);
+
+        // Limpiar el intervalo cuando el componente se desmonte
+        return () => clearInterval(intervalo);
+    }, []); // Array vacío para que solo se ejecute al montar el componente
 
     const cargarEdificios = async () => {
         try {
@@ -216,6 +243,7 @@ const Clicker: React.FC = () => {
         cargarEdificios();
         cargarMejoras();
         cargarMejorasCompradas();
+        obtenerDescripcionAleatoria();
     }, [userData, navigate]);
 
     React.useEffect(() => {
@@ -395,7 +423,7 @@ const Clicker: React.FC = () => {
                     <button className='cerrar-sesion' onClick={() => navigate('/login')}>Cerrar sesion</button>
                 </div>
                 <div className='primer-tercio-parte-central'>
-                    <p className='descripcion'>¡Bienvenido {userData?.usuario}!</p>
+                    <p className='descripcion'>{descripcionAleatoria}</p>
                 </div>
             </div>
 

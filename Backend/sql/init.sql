@@ -12,8 +12,8 @@ FLUSH PRIVILEGES;
 -- -----------------------------------------------------
 -- Schema mydb
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8 ;
-USE `mydb` ;
+CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE `mydb`;
 
 -- -----------------------------------------------------
 -- Table `mydb`.`Usuario`
@@ -34,10 +34,64 @@ ENGINE = InnoDB AUTO_INCREMENT = 1;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`Descripciones` (
   `idDescripciones` INT NOT NULL,
-  `descripcion` LONGTEXT NULL,
+  `descripcion` LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
   PRIMARY KEY (`idDescripciones`))
-ENGINE = InnoDB;
+ENGINE = InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- -----------------------------------------------------
+-- Data for table `mydb`.`Descripciones`
+-- -----------------------------------------------------
+INSERT INTO Descripciones (idDescripciones, descripcion) VALUES
+(1, 'Los perros sudan, aquí no se libra nadie Pero, ¿sabes por dónde lo hacen? Si no te perdiste nuestro anterior post (50 datos interesantes sobre los gatos), seguro que ya lo sabes: efectivamente, sudan por las plantas de sus pies'),
+(2, 'Tienen el sentido del oído taaan desarrollado que pueden escuchar sonidos desde una distancia de 225 hasta 230 metros. Casi nada'),
+(3, 'Un perro cachorro pasa el 10% del día alimentándose y jugando, el 90% restante lo utiliza para dormir. Lo que se dice una vida perra 😛'),
+(4, 'En Estados Unidos existe una emisora de radio sólo para perros. Ha sido creada para entretener a perros que pasan muchas horas solos en casa'),
+(5, 'Los perros pueden ser zurdos o diestros, indistintamente, al igual que los humanos'),
+(6, 'Las estadísticas nos dicen que los perros de raza pequeña viven más que los de raza grande'),
+(7, 'El dóberman debe su nombre al alemán Karl Friedrich Louis Dobermann, quien a finales del siglo XIX, emprende la tarea de crear una nueva raza de perro'),
+(8, 'No existe otra especie de animal que tenga la misma diversidad de razas como el perro. Tienen el record del mundo de mayor número de razas registradas'),
+(9, 'Diversos estudios han comprobado que los humanos y los canes compartimos un 75% del ADN'),
+(10, 'La raza de perro más pequeña que existe es el Chihuahueño, la más grande es el Gran Danés, la más pesada es el San Bernardo y la más rápida es el Galgo'),
+(11, '¿Y si, además, os decimos que una pareja de perros y su descendencia podría producir hasta 66 mil perros en solo 6 años? Tomando en cuenta que los perros viven un poco más de 12 años, la cifra se duplica y llegan a producir 132 mil perros'),
+(12, 'Llegan a la madurez cuando cumplen alrededor un año y medio'),
+(13, 'Los perros aprenden de acuerdo a la experiencia'),
+(14, 'Además, varios estudios han demostrado que, cuando se trata de recordar palabras, la habilidad de un perro puede ser igual a la de un niño de 2 años: las razas más inteligentes de perros pueden absorber hasta 250 palabras'),
+(15, '¿Sabías que los perros son celosos? Un estudio de 2008 publicado en la revista Proceedings de la Academia Nacional de Ciencias de Estados Unidos, encontró que cuando los perros perciben que otros perros reciben recompensas por un truco y ellos no, estos se agitan, se rascan demasiado y evitan la mirada de sus colegas premiados'),
+(16, 'Un perro común tiene 42 dientes y, al igual que el ser humano, nacen con los llamados “dientes de leche”'),
+(17, 'Es difícil que el “ratoncito Perez” visite a nuestros peludos, pues normalmente tragan los dientes que se les suelen caer mientras comen'),
+(18, 'A los seis meses de su nacimiento, un perro ya debe tener todos sus dientes permanentes'),
+(19, 'Los perros pueden ser zurdos o diestros, indistintamente, al igual que los humanos'),
+(20, 'Los machos suelen ser muy territoriales: orinan para marcar territorio'),
+(21, 'De acuerdo a los estudios del científico Stanley Coren, las razas de perro más inteligentes son: el Pastor Alemán, el Caniche (Poodle), el Border Collie y el Golden Retriever'),
+(22, 'Por otro lado, el “Perro Afgano” está posicionado en la escala de inteligencia de Stanley Coren con el número 79, el número más bajo'),
+(23, '¡El sentido del olfato de un perro es INCREÍBLE! Pueden oler todo tipo de cosas, incluso se dice que pueden oler células del cáncer, epilepsia y diabetes. Para esto último deben ser entrenados, pero no es algo de ciencia-ficción…'),
+(24, 'Necesitan un olfato muy fuerte porque no tienen una visión muy aguda'),
+(25, '¿Sabías que la nariz del perro es la marca de identificación única? Esto es por qué las marcas que tiene cada perro en la nariz es diferente en cada animal y sirve de identificación como en nosotros las huellas dactilares'),
+(26, 'Seguramente has escuchado que la boca de los perros es un nido de gérmenes; pero nada más lejos de la realidad: se ha demostrado que, generalmente, la boca de los perros suele tener menos bacterias y gérmenes que la de un humano'),
+(27, 'El chocolate que tanto nos gusta (y tanto les gusta…) no es bueno para ellos: la teobromina en el cacao provoca daños al sistema nervioso, el corazón y en algunos casos puede ser fatal'),
+(28, 'Los perros tienen cerca de 100 expresiones faciales, la mayoría las realizan con las orejas'),
+(29, 'Pueden saber como nos encontramos sólo con una mirada: pueden detectar nuestras emociones sólo observando nuestro rostro y a través del nuestro tono de voz'),
+(30, 'La temperatura del cuerpo de un perro es ligeramente más alta que la de un humano: su temperatura normal está entre 38 y 39º'),
+(31, 'Los seres humanos pueden detectar sonidos a 20.000 veces por segundo, mientras que los perros pueden detectar frecuencias de 30.000 veces por segundo'),
+(32, 'Los perros sufren dolor cuando hay una tormenta eléctrica. Éstas tienen ciertas frecuencias de sonido que pueden dañar sus oídos'),
+(33, 'Los cachorros dálmata nacen completamente blancos'),
+(34, 'El Basenji es el único perro en el mundo que no puede ladrar'),
+(35, 'Se estima que 1.000.000 de perros en los Estados Unidos, han sido nombrados como herederos por voluntad de sus dueños'),
+(36, 'A un año de edad son tan maduros físicamente como un humano de 15 años de edad'),
+(37, 'Los perros sueñan. Y los espasmos de las patas que se producen mientras duermen son señales de que tu mascota está teniendo un sueño'),
+(38, 'Dos perros callejeros en Afganistán salvaron a 50 soldados norteamericanos. Un grupo de Facebook juntó cerca de 21 mil dólares para llevar a los perros de vuelta a Estados Unidos y reunirlos con los soldados'),
+(39, 'La canción de Los Beatles “A day in the Life” tiene un silbido extra, bastante agudo, que sólo es audible por perros. Esto fue idea de Paul McCartney para entretener a su pastor sheltie'),
+(40, 'Los perros de servicio están entrenados para saber en qué momento deben cumplir con su deber. Así, cuando tienen los arneses puestos saben que es hora de trabajar pero en el momento en el que se los quitan saben que pueden comenzar a jugar. ¡Y así lo hacen!'),
+(41, 'En la antigua China, el emperador tenía en su última línea de defensa a un pequeño pekines. El perro se escondía en la manga de su túnica y atacaba al enemigo en caso de emergencia'),
+(42, 'Cuando informaron a Lord Byron de que los perros no estaban permitidos en la Universidad de Cambridge, éste, en signo de rebeldía, decidió llevar un oso a la institución. ¡Cualquiera le dice nada al “osito”!'),
+(43, 'Como ya os hemos contado, los perros pueden ser capaces de entender más de 250 palabras y gestos pero es que, además, pueden contar hasta 5 y resolver simples problemas matemáticos'),
+(44, 'Se dice que los perros descienden de los lobos. En el año 1993 fueron clasificados como una subespecie del lobo gris (Canis lupus)'),
+(45, 'Pablo Picasso pintaba en varias de sus obras a su Dachshund, Lump. En su serie de las Meninas, Lump aparece en 15 de sus 44 obras'),
+(46, 'El concepto de “perros guía” se originó en Suiza; estos perros, incluso, aguantan las ganas de hacer sus necesidades si es necesario'),
+(47, 'Los perros no sienten culpa. Si los ves con una cara triste simplemente es la respuesta al tono de voz usado por su dueño'),
+(48, 'Eddie, el Jack Russel de la serie Frasier (1993-2004), recibía más cartas de admiradores que el propio Kelsey Grammer'),
+(49, 'A los perros les encanta sentirse queridos. Los estudios demuestran que “el toque humano” mejora las funciones del perro como las respiratorias, digestivas y circulatorias. Un perro querido es un perro sano'),
+(50, 'A ellos les gusta sentirse queridos, incluso esto repercute en su salud pero, ¿y nosotros? Los perros pasan a ser uno más de la familia, nos acompañan, nos ayudan cuando lo necesitamos y, al fin y al cabo, son nuestro mejor y más fiel amigo');
 
 -- -----------------------------------------------------
 -- Table `mydb`.`Edificios`

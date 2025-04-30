@@ -5,6 +5,7 @@ import crearCuenta from './endpoints/crearCuenta';
 import iniciarSesion from './endpoints/iniciarSesion';
 import click from './endpoints/click';
 import listaEdificios from './endpoints/listaEdificios';
+import obtenerDescripciones from './endpoints/obtenerDescripciones';
 import comprarEdificio from './endpoints/comprarEdificio';
 import actualizarPuntos from './endpoints/actualizarPuntos';
 import obtenerMejoras from './endpoints/obtenerMejoras';
@@ -39,5 +40,6 @@ router.use('/actualizar-puntos', actualizarPuntos);
 router.use('/mejoras', obtenerMejoras);
 router.use('/comprar-mejora', comprarMejora);
 router.use('/mejoras-compradas', obtenerMejorasCompradas);
+router.use('/descripciones', obtenerDescripciones);
 
 export default router;
