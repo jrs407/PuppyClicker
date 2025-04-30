@@ -58,6 +58,13 @@ interface Mejora {
     tipoMejora: string;
 }
 
+interface MejoraComprada {
+    idMejoras: number;
+    nombre: string;
+    categoria: number;
+    tipoMejora: string;
+}
+
 const Clicker: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
@@ -65,6 +72,7 @@ const Clicker: React.FC = () => {
     const [puntos, setPuntos] = useState(0);
     const [edificios, setEdificios] = useState<Edificio[]>([]);
     const [mejoras, setMejoras] = useState<Mejora[]>([]);
+    const [mejorasCompradas, setMejorasCompradas] = useState<MejoraComprada[]>([]);
     const { userData } = location.state as LocationState || { 
         userData: { 
             idUsuario: 0,
@@ -109,9 +117,42 @@ const Clicker: React.FC = () => {
         }
     };
 
+    const cargarMejorasCompradas = async () => {
+        try {
+            const response = await fetch(`http://localhost:8080/api/mejoras-compradas/${userData.idUsuario}`);
+            const data = await response.json();
+            
+            if (data.success) {
+                setMejorasCompradas(data.mejoras);
+            } else {
+                console.error('Error al cargar mejoras compradas:', data.error);
+            }
+        } catch (error) {
+            console.error('Error al cargar mejoras compradas:', error);
+        }
+    };
+
+    const calcularMultiplicadoresPorTipo = () => {
+        const multiplicadores: { [key: string]: number } = {};
+        
+        mejorasCompradas.forEach(mejora => {
+            // Inicializar multiplicador si no existe
+            if (!multiplicadores[mejora.tipoMejora]) {
+                multiplicadores[mejora.tipoMejora] = 1;
+            }
+            // Cada mejora duplica la producción
+            multiplicadores[mejora.tipoMejora] *= 2;
+        });
+        
+        return multiplicadores;
+    };
+
     const calcularProduccionTotal = (edificios: Edificio[]): number => {
+        const multiplicadores = calcularMultiplicadoresPorTipo();
+        
         return edificios.reduce((total, edificio) => {
-            return total + (edificio.produccionInicial * edificio.numeroComprado);
+            const multiplicador = multiplicadores[edificio.raza] || 1;
+            return total + (edificio.produccionInicial * edificio.numeroComprado * multiplicador);
         }, 0);
     };
 
@@ -147,11 +188,12 @@ const Clicker: React.FC = () => {
         
         cargarEdificios();
         cargarMejoras();
+        cargarMejorasCompradas();
     }, [userData, navigate]);
 
     React.useEffect(() => {
         setProduccionPorSegundo(calcularProduccionTotal(edificios));
-    }, [edificios]);
+    }, [edificios, mejorasCompradas]); // Añadir mejorasCompradas como dependencia
 
     React.useEffect(() => {
         if (produccionPorSegundo <= 0) return;
@@ -168,20 +210,28 @@ const Clicker: React.FC = () => {
         };
     }, [produccionPorSegundo]);
 
+    const calcularMultiplicadorClick = (): number => {
+        return mejorasCompradas
+            .filter(mejora => mejora.tipoMejora === 'click')
+            .reduce((mult, _) => mult * 2, 1);
+    };
+
     const registrarClick = async () => {
         try {
+            const multiplicadorClick = calcularMultiplicadorClick();
             const response = await fetch('http://localhost:8080/api/click', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    idUsuario: userData.idUsuario
+                    idUsuario: userData.idUsuario,
+                    multiplicador: multiplicadorClick
                 }),
             });
 
             if (response.ok) {
-                setPuntos(prev => prev + 1);
+                setPuntos(prev => prev + multiplicadorClick);
             }
         } catch (error) {
             console.error('Error al registrar click:', error);
@@ -272,9 +322,9 @@ const Clicker: React.FC = () => {
             
             if (data.success) {
                 setPuntos(data.puntos);
-
                 setMejoras(mejoras.filter(m => m.idMejoras !== mejora.idMejoras));
-
+                // Recargar las mejoras compradas para actualizar los multiplicadores
+                await cargarMejorasCompradas();
             } else {
                 console.error('Error al comprar mejora:', data.error);
             }
@@ -325,6 +375,7 @@ const Clicker: React.FC = () => {
                 <div className= 'parte-central'>
                     <div className='contador-clicker'>
                         <p className='numero-clicker'>{puntos}</p>
+                        <p className='produccion-actual'>{produccionPorSegundo} por segundo</p>
                     </div>
                     <div className='segundo-tercio-central'>
                         <div 
