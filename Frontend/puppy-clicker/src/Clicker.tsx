@@ -83,7 +83,7 @@ const Clicker: React.FC = () => {
     };
     const [hoveredId, setHoveredId] = useState<number | null>(null);
     const [produccionPorSegundo, setProduccionPorSegundo] = useState(0);
-    const [dogImage, setDogImage] = useState<string>('https://i.pinimg.com/736x/f9/c5/9a/f9c59a1139f2ddf1f36ffc702f4b1d0e.jpg');
+    const [dogImage, setDogImage] = useState<string>('https://www.purina.es/sites/default/files/2021-02/BREED%20Hero_0075_japanese_shiba_inu.jpg');
     const [lastFetch, setLastFetch] = useState<number>(0);
     const FETCH_DELAY = 1000;
 
