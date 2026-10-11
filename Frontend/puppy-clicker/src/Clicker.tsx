@@ -30,6 +30,7 @@ interface LocationState {
         usuario: string;
         puntos: number;
     };
+    token: string;
 }
 
 interface ClickImage {
@@ -74,12 +75,31 @@ const Clicker: React.FC = () => {
     const [edificios, setEdificios] = useState<Edificio[]>([]);
     const [mejoras, setMejoras] = useState<Mejora[]>([]);
     const [mejorasCompradas, setMejorasCompradas] = useState<MejoraComprada[]>([]);
-    const { userData } = location.state as LocationState || { 
-        userData: { 
+    const { userData, token } = location.state as LocationState || {
+        userData: {
             idUsuario: 0,
             usuario: '',
             puntos: 0
-        } 
+        },
+        token: ''
+    };
+
+    // fetch con el token de sesión; si caduca o no es válido se vuelve al login
+    const fetchAutenticado = async (url: string, opciones: RequestInit = {}) => {
+        const response = await fetch(url, {
+            ...opciones,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+                ...opciones.headers
+            },
+        });
+
+        if (response.status === 401) {
+            navigate('/login');
+        }
+
+        return response;
     };
     const [hoveredId, setHoveredId] = useState<number | null>(null);
     const [produccionPorSegundo, setProduccionPorSegundo] = useState(0);
@@ -140,7 +160,7 @@ const Clicker: React.FC = () => {
 
     const cargarEdificios = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/api/edificios/${userData.idUsuario}`);
+            const response = await fetchAutenticado('http://localhost:8080/api/edificios');
             const data = await response.json();
             
             if (data.success) {
@@ -155,7 +175,7 @@ const Clicker: React.FC = () => {
 
     const cargarMejoras = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/api/mejoras/${userData.idUsuario}`);
+            const response = await fetchAutenticado('http://localhost:8080/api/mejoras');
             const data = await response.json();
             
             if (data.success) {
@@ -173,7 +193,7 @@ const Clicker: React.FC = () => {
 
     const cargarMejorasCompradas = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/api/mejoras-compradas/${userData.idUsuario}`);
+            const response = await fetchAutenticado('http://localhost:8080/api/mejoras-compradas');
             const data = await response.json();
             
             if (data.success) {
@@ -205,24 +225,16 @@ const Clicker: React.FC = () => {
         const multiplicadores = calcularMultiplicadoresPorTipo();
         
         return edificios.reduce((total, edificio) => {
-            const multiplicador = multiplicadores[edificio.raza] || 1;
+            const multiplicador = multiplicadores[edificio.raza.toLowerCase()] || 1;
             return total + (edificio.produccionInicial * edificio.numeroComprado * multiplicador);
         }, 0);
     };
 
-    const actualizarPuntos = async (puntosGenerados: number) => {
-        if (puntosGenerados <= 0) return;
-        
+    // El servidor calcula los puntos generados desde la última actualización
+    const actualizarPuntos = async () => {
         try {
-            const response = await fetch('http://localhost:8080/api/actualizar-puntos', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    idUsuario: userData.idUsuario,
-                    puntos: puntosGenerados
-                }),
+            const response = await fetchAutenticado('http://localhost:8080/api/actualizar-puntos', {
+                method: 'POST'
             });
 
             if (!response.ok) {
@@ -234,7 +246,7 @@ const Clicker: React.FC = () => {
     };
 
     React.useEffect(() => {
-        if (!userData?.usuario) {
+        if (!userData?.usuario || !token) {
             navigate('/login');
             return;
         }
@@ -244,7 +256,7 @@ const Clicker: React.FC = () => {
         cargarMejoras();
         cargarMejorasCompradas();
         obtenerDescripcionAleatoria();
-    }, [userData, navigate]);
+    }, [userData, token, navigate]);
 
     React.useEffect(() => {
         setProduccionPorSegundo(calcularProduccionTotal(edificios));
@@ -257,7 +269,7 @@ const Clicker: React.FC = () => {
             const puntosGenerados = produccionPorSegundo;
             setPuntos(prev => prev + puntosGenerados);
 
-            actualizarPuntos(puntosGenerados);
+            actualizarPuntos();
         }, 1000);
 
         return () => {
@@ -265,28 +277,16 @@ const Clicker: React.FC = () => {
         };
     }, [produccionPorSegundo]);
 
-    const calcularMultiplicadorClick = (): number => {
-        return mejorasCompradas
-            .filter(mejora => mejora.tipoMejora === 'click')
-            .reduce((mult) => mult * 2, 1);
-    };
-
     const registrarClick = async () => {
         try {
-            const multiplicadorClick = calcularMultiplicadorClick();
-            const response = await fetch('http://localhost:8080/api/click', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    idUsuario: userData.idUsuario,
-                    multiplicador: multiplicadorClick
-                }),
+            // El multiplicador lo decide el servidor según las mejoras compradas
+            const response = await fetchAutenticado('http://localhost:8080/api/click', {
+                method: 'POST'
             });
 
             if (response.ok) {
-                setPuntos(prev => prev + multiplicadorClick);
+                const data = await response.json();
+                setPuntos(prev => prev + data.multiplicador);
             }
         } catch (error) {
             console.error('Error al registrar click:', error);
@@ -326,13 +326,9 @@ const Clicker: React.FC = () => {
         }
 
         try {
-            const response = await fetch('http://localhost:8080/api/comprar-edificio', {
+            const response = await fetchAutenticado('http://localhost:8080/api/comprar-edificio', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
                 body: JSON.stringify({
-                    idUsuario: userData.idUsuario,
                     idEdificio: edificio.idEdificios
                 }),
             });
@@ -363,13 +359,9 @@ const Clicker: React.FC = () => {
         }
 
         try {
-            const response = await fetch('http://localhost:8080/api/comprar-mejora', {
+            const response = await fetchAutenticado('http://localhost:8080/api/comprar-mejora', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
                 body: JSON.stringify({
-                    idUsuario: userData.idUsuario,
                     idMejora: mejora.idMejoras
                 }),
             });

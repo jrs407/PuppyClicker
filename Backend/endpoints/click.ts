@@ -1,37 +1,33 @@
 import express from 'express';
-import { Pool, RowDataPacket } from 'mysql2/promise';
+import { Pool, ResultSetHeader } from 'mysql2/promise';
+import { calcularMultiplicadorClick } from '../produccion';
 
 const router = express.Router();
 
 const clickHandler: express.RequestHandler = async (req, res) => {
-    const { idUsuario, multiplicador } = req.body as {
-        idUsuario: number;
-        multiplicador: number;
-    };
+    const idUsuario = (req as any).idUsuario as number;
     const pool = (req as any).db as Pool;
 
     try {
-        const [users] = await pool.query<RowDataPacket[]>(
-            'SELECT * FROM Usuario WHERE idUsuario = ?',
-            [idUsuario]
+        const multiplicador = await calcularMultiplicadorClick(pool, idUsuario);
+
+        const [resultado] = await pool.query<ResultSetHeader>(
+            'UPDATE Usuario SET puntos = puntos + ? WHERE idUsuario = ?',
+            [multiplicador, idUsuario]
         );
 
-        if (users.length === 0) {
-            res.status(401).json({
+        if (resultado.affectedRows === 0) {
+            res.status(404).json({
                 success: false,
                 error: 'Usuario no encontrado'
             });
             return;
         }
 
-        await pool.query(
-            'UPDATE Usuario SET puntos = puntos + ? WHERE idUsuario = ?',
-            [multiplicador, idUsuario]
-        );
-        
         res.status(200).json({
             success: true,
-            message: 'Click registrado exitosamente'
+            message: 'Click registrado exitosamente',
+            multiplicador
         });
     } catch (error) {
         console.error('Error al registrar click:', error);

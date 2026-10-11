@@ -9,11 +9,10 @@ app.use(express.json());
 
 // Middleware para CORS
 app.use((req, res, next) => {
+  // No se registran cabeceras ni cuerpo: contienen tokens y contraseñas
   console.log('Request received:', {
     method: req.method,
-    path: req.path,
-    headers: req.headers,
-    body: req.body
+    path: req.path
   });
 
   res.header('Access-Control-Allow-Origin', '*');

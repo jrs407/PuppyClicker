@@ -4,7 +4,7 @@ import { Pool, RowDataPacket } from 'mysql2/promise';
 const router = express.Router();
 
 const obtenerMejorasCompradasHandler: express.RequestHandler = async (req, res) => {
-    const { idUsuario } = req.params;
+    const idUsuario = (req as any).idUsuario as number;
     const pool = (req as any).db as Pool;
 
     try {
@@ -47,6 +47,6 @@ const obtenerMejorasCompradasHandler: express.RequestHandler = async (req, res) 
     }
 };
 
-router.get('/:idUsuario', obtenerMejorasCompradasHandler);
+router.get('/', obtenerMejorasCompradasHandler);
 
 export default router;

@@ -9,8 +9,6 @@ const IniciarSesion: React.FC = () => {
       const [error, setError] = React.useState('');
 
       const handleLogin = async () => {
-          console.log('Iniciando sesión con:', { usuario, contrasena });
-  
           if (!usuario || !contrasena) {
               setError('Todos los campos son obligatorios');
               return;
@@ -38,7 +36,7 @@ const IniciarSesion: React.FC = () => {
               }
   
               if (response.ok) {
-                  navigate('/clicker', { state: { userData: data.userData } });
+                  navigate('/clicker', { state: { userData: data.userData, token: data.token } });
               } else {
                   setError(data.error || `Error ${response.status}: ${response.statusText}`);
               }

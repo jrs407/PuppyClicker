@@ -32,12 +32,14 @@ services:
       - DB_USER=root
       - DB_PASSWORD=puppypassword
       - DB_NAME=mydb
+      - JWT_SECRET=${JWT_SECRET:-}
     networks:
       - puppy-network
 
   db:
     image: mysql:8.0
     restart: always
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     environment:
       MYSQL_ROOT_PASSWORD: puppypassword
       MYSQL_DATABASE: mydb

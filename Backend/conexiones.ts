@@ -11,6 +11,7 @@ import actualizarPuntos from './endpoints/actualizarPuntos';
 import obtenerMejoras from './endpoints/obtenerMejoras';
 import comprarMejora from './endpoints/comprarMejora';
 import obtenerMejorasCompradas from './endpoints/obtenerMejorasCompradas';
+import { requireAuth } from './auth';
 
 const router = express.Router();
 
@@ -33,13 +34,13 @@ router.get('/test', async (req: any, res) => {
 
 router.use('/cuenta', crearCuenta);
 router.use('/iniciar-sesion', iniciarSesion);
-router.use('/click', click);
-router.use('/edificios', listaEdificios);
-router.use('/comprar-edificio', comprarEdificio);
-router.use('/actualizar-puntos', actualizarPuntos);
-router.use('/mejoras', obtenerMejoras);
-router.use('/comprar-mejora', comprarMejora);
-router.use('/mejoras-compradas', obtenerMejorasCompradas);
+router.use('/click', requireAuth, click);
+router.use('/edificios', requireAuth, listaEdificios);
+router.use('/comprar-edificio', requireAuth, comprarEdificio);
+router.use('/actualizar-puntos', requireAuth, actualizarPuntos);
+router.use('/mejoras', requireAuth, obtenerMejoras);
+router.use('/comprar-mejora', requireAuth, comprarMejora);
+router.use('/mejoras-compradas', requireAuth, obtenerMejorasCompradas);
 router.use('/descripciones', obtenerDescripciones);
 
 export default router;

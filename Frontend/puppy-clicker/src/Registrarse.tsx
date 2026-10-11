@@ -10,8 +10,6 @@ const Registrarse: React.FC = () => {
     const [error, setError] = React.useState('');
 
     const handleRegister = async () => {
-        console.log('Iniciando registro con:', { usuario, contrasena1, contrasena2 });
-
         if (!usuario || !contrasena1 || !contrasena2) {
             setError('Todos los campos son obligatorios');
             return;
@@ -47,8 +45,9 @@ const Registrarse: React.FC = () => {
             if (response.ok) {
                 navigate('/clicker', { 
                     state: { 
-                        userData: data.userData 
-                    } 
+                        userData: data.userData,
+                        token: data.token
+                    }
                 });
             } else {
                 setError(data.error || `Error ${response.status}: ${response.statusText}`);

@@ -5,5 +5,6 @@ export const dbConfig: PoolOptions = {
   user: process.env.DB_USER || 'root',
   password: process.env.DB_PASSWORD || 'puppypassword',
   database: process.env.DB_NAME || 'mydb',
-  port: 3306
+  port: 3306,
+  charset: 'utf8mb4'
 };
